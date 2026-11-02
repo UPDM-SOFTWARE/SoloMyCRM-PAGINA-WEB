@@ -1,7 +1,7 @@
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const CRM_API_URL = process.env.CRM_API_URL || "https://api.solomycrm.com";
+const CRM_API_URL = process.env.CRM_API_URL || "https://app.solomycrm.com";
 const WEBHOOK_INTERNAL_SECRET = process.env.WEBHOOK_INTERNAL_SECRET;
 
 export const config = {
@@ -9,10 +9,11 @@ export const config = {
 };
 
 async function getRawBody(req) {
+  if (Buffer.isBuffer(req.body)) return req.body;
   return new Promise((resolve, reject) => {
-    let data = "";
-    req.on("data", (chunk) => { data += chunk; });
-    req.on("end", () => resolve(Buffer.from(data)));
+    const chunks = [];
+    req.on("data", (chunk) => chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)));
+    req.on("end", () => resolve(Buffer.concat(chunks)));
     req.on("error", reject);
   });
 }

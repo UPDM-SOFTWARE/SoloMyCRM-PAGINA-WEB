@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import bcrypt from 'bcryptjs';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const CRM_API_URL = process.env.CRM_API_URL || 'https://api.solomycrm.com';
+const CRM_API_URL = process.env.CRM_API_URL || 'https://app.solomycrm.com';
 
 const PLAN_PRICES = {
   mensual:        process.env.STRIPE_PRICE_MENSUAL,
